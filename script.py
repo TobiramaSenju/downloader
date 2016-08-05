@@ -4,19 +4,24 @@ from urllib.request import urlopen # Accessing the website
 import requests                    # Downloading the image
 import shutil                      # Downloading the image
 import re                          # Regex matching
+from string import punctuation as punct # Removes punctuation from name in URL
 
 # Change this to the manga you want to download (each word must start with a capital letter)
 name = "One Piece" 
 
-# Check if a chapter was entered
-# Otherwise download starting from Chapter 1
+# Execution syntax:
+#   python3 one_piece.py <OPT start_chapter> <OPT end_chapter>
+# 
+# 0 args: downloads all chapters, starting from chapter 1 
+# 1 args: downloads all chapters starting from argument to the end
+# 2 args: downloads all chapters between first and second args
 start_chapter = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 end_chapter   = int(sys.argv[2]) if len(sys.argv) == 3 else sys.maxsize
 
 if start_chapter > end_chapter:
   start_chapter, end_chapter = end_chapter, start_chapter
 
-url = 'http://www.mangareader.net/' + name.lower().replace(" ", "-") + '/'
+url = 'http://www.mangareader.net/' + (''.join(ch for ch in name if ch not in punct)).lower().replace(" ","-") + '/'
 
 current_page = url + str(start_chapter) + '/1'
 
